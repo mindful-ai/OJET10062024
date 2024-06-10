@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Multiplication Table</title>
+  </head>
+  <body>
+    <h1>
+      <label>Multiplication Table Generator</label><br>
+      <label for="num">Enter Number </label>
+
+      <input id="num" type="number" placeholder="1"
+      oninput="tablegen(this.value)"
+      onchange="tablegen(this.value)">
+
+      
+    </h1>
+    
+    <hr>
+    
+    <div class="table" id="table">
+
+    </div>
+
+    <script>
+
+     
+      
+    </script>
+
+  </body>
+</html>
+
+<!-- Other approach could be to create child elements
+and update the inner HTML everytime a new value is
+entered -->
