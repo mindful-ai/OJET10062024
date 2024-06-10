@@ -1,0 +1,21 @@
+     var tablegen = function(val){
+        if(val != ''){
+          var parent = document.getElementById("table");
+          cleartable();
+          for(i = 1; i <= 10;i ++){
+            var child = document.createElement("h3");
+            var text = document.createTextNode(val + " X " + i + " = " + (val*i));
+            child.appendChild(text);
+            parent.appendChild(child);
+          }
+        }
+     }
+
+     var cleartable = function(){
+        var parent = document.getElementById("table");
+        while(parent.firstChild){
+          parent.removeChild(parent.lastChild);
+        }
+     }
+
+     -------------------------------------------------------------------------------------------------------------------------------------------
