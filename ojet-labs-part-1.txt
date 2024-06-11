@@ -1,0 +1,423 @@
+----------------------------------------------------------------------------------------
+Lab #1
+----------------------------------------------------------------------------------------
+
+Objective:
+Installation of node.js and npm
+Installation of OJET CLI 
+Creating and running the OJET project
+Analysing the folder structure
+
+----------------------------------------------------------------------------------------
+Lab #2 [10 mins]
+----------------------------------------------------------------------------------------
+
+Objective:
+To understand data binding using knockout observables in OJET environment
+
+Reference:
+https://knockoutjs.com/documentation/textinput-binding.html
+https://knockoutjs.com/documentation/value-binding.html
+
+
+Step 1:
+Create OJET project with navdrawer template
+Follow the instruction from the instructor
+
+Step: 2
+HTML: dashboard.html
+
+<div>
+      <h6>Name : <input data-bind="textInput:name"> </h6>
+      <h6>Age  : <input data-bind="textInput:age"> </h6>
+      <hr>
+      <h3>Your name is <span data-bind="text:name"> </span> and age is <span data-bind="text:age"> </span><h3>
+</div>
+
+Step 3:
+JS: dashboard.js
+
+    // Observables for name and age
+    self.name = ko.observable("Purushotham");
+    self.age  = ko.observable("35");
+
+Does it work as expected?
+What's the solution?
+
+----------------------------------------------------------------------------------------
+Lab #3 [15 Mins]
+----------------------------------------------------------------------------------------
+
+Objective:
+To understand data binding using knockout observableArray in OJET environment
+To understand the basics of using OJET components
+To understand the new data-bind syntax
+
+Step 1:
+Use the OJET project created in Lab #1
+Follow the instruction given by the instrutor
+
+Step: 2
+HTML: dashboard.html
+
+  <h3>Please follow the statistics</h3>
+  <oj-chart type = "bar" series ="[[datasource]]">
+  </oj-chart>
+
+Step: 3
+JS: dashboard.js
+
+      //Observable array for data
+      var data = [
+                    {name:"Pedestrians", items:[42]},
+                    {name:"Vehicles", items:[82]},
+                    {name:"Bicycles", items:[20]},
+                    {name:"Busses", items:[76]},
+                    {name:"Trains", items:[31]}
+                  
+                  ];
+
+      self.datasource = ko.observableArray(data);
+
+Step: 4
+JS: dashboard.js
+
+Observe the browser, is the chart being displayed?
+To resolve:
+Add ojs/ojchart to the list of module requirements
+
+Step : 5
+
+<oj-chart type = "pie" series ="[[datasource]]">
+</oj-chart>
+
+Step: 6
+
+Change the chart style to "pie"
+
+Step: 6
+
+Questions/assignments:
+
+1. How to change the size of the chart?
+
+
+----------------------------------------------------------------------------------------
+Lab #4 [15]
+----------------------------------------------------------------------------------------
+
+Objective:
+To understand the technique for loading data from an external file
+
+Step 1:
+Use the OJET project used in Lab #3
+Follow the instruction given by the instrutor
+
+Step 2:
+HTML: dashboard.html
+
+Add the following to the existing code:
+
+  <h3>Your time should be distributed the following way</h3>
+  <oj-chart type = "pie" series ="[[datasource2]]">
+    </oj-chart>
+
+Step 3:
+Create a json file called data/data.json in js folder with following data:
+
+[
+    {"name":"Work", "items":[8]},
+    {"name":"Play", "items":[3]},
+    {"name":"Eat", "items":[2]},
+    {"name":"Homework", "items":[3]},
+    {"name":"Exercise", "items":[1]},
+    {"name":"Sleep", "items":[6]},
+    {"name":"Netflix", "items":[1]}
+                  
+]
+
+Then prettify the file for a neat JSON format
+PS: JSON file needs the keys to be in quotes
+
+Step: 4
+JS: dashboard.js
+
+Add the code:
+    var data2 = JSON.parse(file);
+    self.datasource2 = ko.observableArray(data2);
+
+Add the text reference for file
+    text!data/data.json  -> in module requirements, text protocol/plugin from Require JS 
+    file                 -> in the function parameters
+Note that the order should be maintained
+
+
+----------------------------------------------------------------------------------------
+Lab #5 [15]
+----------------------------------------------------------------------------------------
+
+Objective:
+Understanding and exploring the appController.js, main.js and router configuration
+Creating new modules
+
+Step: 1
+Create employees.html in js/views
+
+<div class="oj-hybrid-padding">
+  <h1>Employees</h1>
+</div>
+
+Step: 2
+Create employees.js in js/viewModels
+PS: It's basically a Require JS module
+
+define(['accUtils', 'knockout', 'jquery'],
+ function(accUtils, ko, $) {
+    function EmployeesViewModel() {
+        
+    }
+    return EmployeesViewModel;
+  }
+);
+
+
+Step: 3
+Hook-up the view-viewModel to the application in appController.js
+
+Add the following to navData:
+{ path: 'employees', detail: { label: 'Employees', iconClass: 'oj-ux-ico-information-s' } },
+
+
+Step: 4
+Test with a simple ko observable
+
+employees.html
+
+<div class="oj-hybrid-padding">
+  <h1>Employees</h1>
+  <div>
+      <h6>Name : <input data-bind="textInput:name"> </h6>
+      <hr>
+      <h3>Your name is <span data-bind="text:name"> </span><h3>
+  </div>
+</div>
+
+employees.js
+
+define(['accUtils', 'knockout', 'jquery'],
+ function(accUtils, ko, $) {
+    function EmployeesViewModel() {
+        var self = this;
+        self.name = ko.observable("Raj");
+    }
+    return EmployeesViewModel;
+  }
+);
+
+A module called "employees" is created
+
+----------------------------------------------------------------------------------------
+Lab #6 [15]
+----------------------------------------------------------------------------------------
+
+Objectives:
+
+Exploring the flex layout and basics of responsive design in OJET
+
+STEP 1:
+
+about.html
+oj-flex  -> flex container
+oj-flex-item
+
+STEP 2:
+Create internal panels
+oj-panel
+
+STEP 3:
+Distinguish between the panels using colors 
+Use normal CSS styling
+
+STEP 4:
+Add other ojet components into the containers
+Follow the three step process for adopting OJET cookbook recepies
+
+
+about.html will look like this:
+
+<div class="oj-flex">
+  
+    <div class="oj-flex-item oj-panel" style="margin: 10px; background-color:Coral">
+      <h4>Ramesh</h4>
+      <strong>20+ years of experience in Production Management.</strong>
+      <br>
+      <br>
+      <oj-chart type = "bar" series ="[[datasource1]]">
+      </oj-chart>
+    </div>
+
+    <div class="oj-flex-item oj-panel" style="margin: 10px; background-color:SlateBlue">
+      <h4>Kumar</h4>
+      <strong>18+ years of experience in Electrical Assembly </strong>
+      <br>
+      <br>
+      <oj-chart type = "bar" series ="[[datasource2]]">
+      </oj-chart>
+    </div>
+
+    <div class="oj-flex-item oj-panel" style="margin: 10px; background-color:Khaki">
+      <h4>Sadhana</h4>
+      <strong>19+ years of experience in Electronic Product R & D </strong>
+      <br>
+      <br>
+      <oj-chart type = "bar" series ="[[datasource3]]">
+      </oj-chart>
+    </div>
+</div>
+
+about.js
+
+      var self = this;
+
+      // ----------------------------------------------------------------
+
+      var data1 = [
+        {name:"Papers Published", items:[12]},
+        {name:"Projects Completed", items:[14]},
+        {name:"Team Size", items:[28]}   
+      ];
+
+      var data2 = [
+              {name:"Papers Published", items:[10]},
+              {name:"Projects Completed", items:[18]},
+              {name:"Team Size", items:[8]}   
+            ]; 
+      
+      var data3 = [
+              {name:"Papers Published", items:[17]},
+              {name:"Projects Completed", items:[8]},
+              {name:"Team Size", items:[18]}   
+            ];
+
+      self.datasource1 = ko.observableArray(data1);
+      self.datasource2 = ko.observableArray(data2);
+      self.datasource3 = ko.observableArray(data3);
+
+Assignment: 
+1. How do you add a photograph of the person to the container
+2. Explore the Masonry Layout models
+
+-----------------------------------------------------------------------------------
+LAB 7 [20]
+-----------------------------------------------------------------------------------
+Objective:
+To explore the OJET cookbook
+To learn to adopt cookbook components into OJET projects
+
+Step 1:
+Paste the following code in dashboard.html replacing the city transport statistics chart
+
+<oj-chart type = "pie" series ="[[datasource]]">
+</oj-chart>
+
+Test if it is working. This is an alternative to ojComponent.
+The details can be found in the OJET Cookbook. Browse the OJET Cookbook for this components
+and observe how it is oraganized and many other parameters of the oj-chart.
+
+Step 2:
+
+Let's give an option to the user to choose the representation of the
+city statistics either using a pie chart or a bar chart
+
+Explore and discuss which is the best component to use
+Say the following is shortlisted. Let's see how we can incorporate it
+into our app
+
+Forms > Select > Select Single > Basic
+
+    a. Explore how it works
+    b. Analyse the html code
+    c. Analyze the js code and look into the observables
+    d. Modify the code according to your needs
+    e. Copy the code snippets into the application
+    f. Remember to add the module to requirements list in js file
+    g. Hook-up and test
+
+After getting the results in the Cookbook Playground
+
+HTML code copied:
+
+  <h3>Please keep in mind city transport statistics</h3>
+  <!--
+  <div data-bind="ojComponent:{ component: 'ojChart', type: 'bar', series: datasource }">
+  -->
+
+  <div id="containerDiv">
+    
+    <oj-label for="select1">Select Single with ArrayDataProvider</oj-label>
+            
+    <oj-select-single id="select1"
+              style="max-width:20em"
+              data="[[chartsDP]]" 
+              value="{{selectVal}}">
+    </oj-select-single>
+    
+    <br/>
+    <br/>
+            
+    <div> 
+
+      <oj-label for="selectedval">Current selected value is</oj-label>
+      
+      <span id="selectedval">
+        <oj-bind-text value="[[selectVal]]"></oj-bind-text>
+      </span>
+
+    </div>
+
+  </div>
+
+  <oj-chart type = "[[selectVal]]" series ="[[datasource]]">
+  </oj-chart>
+
+JS code copied:
+
+    self.selectVal = ko.observable('pie');
+
+    var chartoptions = [
+        { value: 'pie', label: 'pie' },
+        { value: 'bar', label: 'bar' }
+      ];
+  
+    this.chartsDP = new ArrayDataProvider(chartoptions, { keyAttributes: 'value' });
+
+Module reference: 
+'ojs/ojarraydataprovider'
+'ojs/ojselectsingle'
+
+Do you get the results?
+
+Step 3:
+
+Debug using developer tools of the user as instructed by the instructor
+
+Step 4:
+
+Fix the error
+
+Step 5:
+
+CREATIVE LAB:
+-----------------------------------------------------------------------------------
+
+Instead of age input date of birth such as 15-12-1999
+Age should be calculculated and displayed in the statement
+"Your name is Raj and age is 35"
+Note: You may have to use date converters in oracle JET
+
+CREATIVE LAB: (Optionally do this as an assignment)
+-----------------------------------------------------------------------------------
+1. Re-do prime numbers assignment with OJET components
+2. Re-do currency converter using OJET components
+   Additionally add more currency options, get ideas from google converter
+3. Implement the calculator using OJET components
