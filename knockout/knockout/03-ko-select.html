@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+</head>
+<body>
+
+    <p>
+        Your country:
+        <select data-bind="options: availableCountries,
+                           value: selectedCountry,
+                           optionsText: 'countryName',
+                           optionsCaption: 'Choose...'"></select>
+    </p>
+     
+    <div data-bind="visible: selectedCountry"> <!-- Appears when you select something -->
+        You have chosen a country with population
+        <span data-bind="text: selectedCountry() ? selectedCountry().countryPopulation : 'unknown'"></span>.
+    </div>
+
+    
+    <script>
+
+        // Constructor for an object with two properties
+        var Country = function(name, population) {
+                    this.countryName = name;
+                    this.countryPopulation = population;
+        };
+
+        var viewModel = function(){
+
+                this.availableCountries =  ko.observableArray([
+                    new Country("UK", 65000000),
+                    new Country("USA", 320000000),
+                    new Country("Sweden", 29000000),
+                    new Country("India", 16000000000)
+                ]);
+                this.selectedCountry = ko.observable(); // Nothing selected by default
+        };
+
+        //binding call
+        ko.applyBindings(new viewModel());
+        
+    </script>
+</body>
+</html>
+

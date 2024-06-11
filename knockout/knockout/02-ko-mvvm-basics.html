@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Knockout Introduction</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+  </head>
+  <body>
+    
+
+    <!-- This is a VIEW - HTML markup that defines the appearance of your UI -->
+
+    <!--
+    <p>First name: <strong data-bind="text: firstName, style: {color: c}"></strong></p>
+    <p>Last name: <strong data-bind="text: lastName"></strong></p>
+    -->
+
+    <p>First name: <input data-bind="textInput: firstName" /></p>
+    <p>Last name: <input data-bind="value: lastName" /></p>
+
+    <p>Full name: <strong data-bind="text: fullName"></strong></p>
+
+    <button data-bind="click: capitalizeLastName" >Go caps</button>
+
+    <!-- This is a simple VIEWMODEL - JavaScript that defines the data and behavior of your UI -->
+
+
+    <script>
+
+        
+
+        // VIEWMODEL
+        function AppViewModel() {
+
+            this.firstName = ko.observable("Ram");
+            this.lastName = ko.observable("Suryavanshi");
+            this.c = "red";
+
+            // KO Computed Property
+            this.fullName = ko.computed(function() {
+                return this.firstName() + " " + this.lastName();    
+            }, this);
+
+            // More behavior
+            // Notice that, to read or write an observable's value, you call it as a function.
+            this.capitalizeLastName = function() {
+                var currentVal = this.lastName();        // Read the current value
+                this.lastName(currentVal.toUpperCase()); // Write back a modified value
+            };
+
+            
+        }
+
+        // Activates knockout.js
+        ko.applyBindings(new AppViewModel());
+
+        
+
+    </script>
+
+
+  </body>
+</html>
+
+
+<!-- 
+    This was a very basic example, but it did illustrate some of the key points of MVVM:
+
+    You've got a clean, object-oriented representation of your UI's data and behaviors (your viewmodel)
+    Separately, you've got a declarative representation of how it should be displayed visibly (your view)
+    You can implement arbitrarily sophisticated behaviors just by updating the viewmodel object. 
+    You don't have to worry about which DOM elements need to be changed/added/removed - 
+    the framework can take care of synchronizing things for you.
+-->

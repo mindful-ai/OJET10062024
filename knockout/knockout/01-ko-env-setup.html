@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    
+</head>
+
+<body>
+    
+    <!-- UI/ View -->
+    <p>Student Name: <strong data-bind="text: Name"></strong></p>
+    <p>Student Age: <strong data-bind="text: Age"></strong></p>
+        
+        
+    <script>
+
+        // View Model
+        function StudentViewModel() {
+
+            // Model
+            this.Name = "Ram";
+            this.Age = "20";
+        }
+
+        // Connect the View Model with the View
+        ko.applyBindings(new StudentViewModel());
+        
+    </script>
+    
+</body>
+</html>
