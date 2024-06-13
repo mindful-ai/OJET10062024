@@ -1,0 +1,190 @@
+-----------------------------------------------------------------------------------
+LAB 8: Working with oj-table component
+-----------------------------------------------------------------------------------
+Objective:
+To study the features of oj-table component
+
+
+Part 1: Implementation
+-----------------------------------------------------------------------------------
+
+View:
+Access https://docs.oracle.com/en/middleware/developer-tools/jet/7.2/develop/whats-new-this-guide-release-7.2.0.html
+copy the <oj-table></oj-table>
+
+ViewModel:
+
+Required Modules:
+"knockout", "ojs/ojarraydataprovider", "ojs/ojtable"
+
+1. Use tabledata.txt to create the array required for the table: say deptArray
+2. Wrap the data in ArrayDataProvider and feed it to oj-table
+   self.dataProvider = new ArrayDataProvider(self.deptArray, {keyAttributes: 'DepartmentId'});
+
+Part 2: Making the table sortable
+-----------------------------------------------------------------------------------
+
+View:
+Use "sortable": "enabled" in DepartmentName column
+
+Part 3: Adding Pagination
+-----------------------------------------------------------------------------------
+
+View:
+
+Add at the bottom of the table:
+    <oj-paging-control id="paging" data='[[]]' page-size='5' slot='bottom'>
+    </oj-paging-control>
+
+ViewModel:
+
+Required Modules:
+"ojs/ojpagingcontrol", "ojs/ojpagingdataproviderview"
+
+Wrap the ArrayDataProvider with PagingDataProviderView and feed it to data attribute 
+of the paging controller and the table as well
+    self.pagingDataProvider =  new PagingDataProviderView(new ArrayDataProvider(self.deptArray, {keyAttributes: 'DepartmentId'}));
+
+
+Update the view with pagingDataProvider for data attribute in oj-table and oj-paging-control
+
+Part 4: Implementing Drag and Drop
+-----------------------------------------------------------------------------------
+
+View:
+
+1. Create another table in the same view, call them master and slave
+2. Call the data input dataProvider2
+3. Add the following properties to master table:
+                selection-mode='{"row": "multiple", "column": "multiple"}'
+                dnd.drag.rows.data-types='["application/ojtablerows+json"]'
+4. Add the following properties to slave table:
+                selection-mode='{"row": "multiple", "column": "multiple"}'
+                dnd.drop.rows.data-types='["application/ojtablerows+json"]'
+                dnd.drop.rows.drop='[[handleDropRows]]'
+
+ViewModel:
+
+1. Create a small dataArray similar to Master table data array and feed it to slave table
+   Remember to make it ko.observableArray()
+
+2. Implement the handleDropRows function:
+   This function should basically trasfer the dragged data into dataArray for slave table
+
+    self.handleDropRows = (event, context) => {
+        const dragData = event.dataTransfer.getData("application/ojtablerows+json");
+        if (dragData) {
+            const dragDataArray = JSON.parse(dragData);
+            console.log(dragDataArray);
+            for (let i = 0; i < dragDataArray.length; i++) {
+                console.log(dragDataArray[i].data);
+                self.dataArray.push(dragDataArray[i].data);
+                //Alternatively splice() can be used as well
+            }
+        }
+        console.log(self.dataArray);
+      };
+
+
+
+CREATIVE LAB:
+-----------------------------------------------------------------------------------
+
+1. Explore drag and drop to a chart
+   Refer: OJET Cookbook
+
+
+
+-----------------------------------------------------------------------------------
+LAB 9: Rest API experiments 
+-----------------------------------------------------------------------------------
+Objective:
+To use ajax() for fetching data from a Rest API end point
+TO experiment with the available data
+
+URL: https://restcountries.eu/rest/v2/all
+
+Analyse the fields/contents using the jQuery ajax call:
+$.ajax({
+            url: "https://restcountries.com/v3.1/all",
+            type: "GET",
+            crossDomain: true,
+            dataType: "json" });
+
+Print the following information from the data received from the URL
+name, capital, population, region, subregion, timezones ---> India
+
+-----------------------------------------------------------------------------------
+LAB 10: Working with the Common Model
+-----------------------------------------------------------------------------------
+Objective:
+To implement the common model to capture the data from the REST endpoint
+
+URL: https://apex.oracle.com/pls/apex/oraclejet/lp/activities/
+
+
+Step 1:
+customers.html
+
+<oj-table id="table" summary="Common Model" aria-label="Common Model Demo"
+                                        data='[[datasource]]' 
+                                        columns='[
+                                        {"headerText": "Name", "field": "name"},
+                                        {"headerText": "Description", "field": "short_desc"}
+                                        ]'>
+</oj-table>
+
+Step 2:
+customers.js
+
+Required Modules:
+        'knockout', 
+        'ojs/ojcollectiondataprovider', 
+        "ojs/ojmodel", 
+        "ojs/ojtable"
+
+
+      var self = this;
+
+        // Setup the service URL
+        self.serviceURL = "https://apex.oracle.com/pls/apex/oraclejet/lp/activities/";
+
+        // Determine the structure/fields for the Model
+        self.parseData = function(response) {
+            return {name: response['name'], short_desc: response['short_desc']};
+        };
+
+        // Extend the model class for creating Department Model
+        self.Department = Model.Model.extend({
+            urlRoot: self.serviceURL,
+            parse: self.parseData,
+            idAttribute: 'id'
+        });
+
+        // We create a Model object
+        self.myDept = new self.Department();
+
+        // Extend the collection class 
+        self.DeptCollection = Model.Collection.extend({
+            url: self.serviceURL + "?limit=50",
+            model: self.myDept
+        });
+
+        // We create the collection object
+        self.DeptCol = ko.observable();
+        self.DeptCol(new self.DeptCollection());
+
+        // Connect the collection object to the table datasource
+        self.datasource = ko.observable();
+        self.datasource(new CollectionDataProvider(self.DeptCol()));
+        
+        
+
+CREATIVE LAB:
+-----------------------------------------------------------------------------------
+
+Repeat Lab 10 with:
+URL: https://restcountries.eu/rest/v2/all
+
+1. Add pagination to the table
+2. Name, Capital, Population, Time Zone
