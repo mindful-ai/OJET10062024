@@ -1,0 +1,71 @@
+import { h } from "preact";
+import { createElement, render } from 'preact';
+
+import "ojs/ojchart";
+import { ojChart } from "ojs/ojchart";
+import "ojs/ojselectsingle";
+import  MutableArrayDataProvider  = require("ojs/ojmutablearraydataprovider");
+
+import { useState, useCallback } from 'preact/hooks';
+
+
+const chartTypes =[
+    {value: "bar", label:"Bar"},
+    {value: "pie", label: "Pie"}
+];
+
+const chartTypeDP = new MutableArrayDataProvider(chartTypes, {keyAttributes: "value"});
+
+
+const chartData = [
+    { id: 0, series: "Baseball", group: "Group A", value: 42 },
+    { id: 1, series: "Baseball", group: "Group B", value: 34 },
+    { id: 2, series: "Bicycling", group: "Group A", value: 55 },
+    { id: 3, series: "Bicycling", group: "Group B", value: 30 },
+    { id: 4, series: "Skiing", group: "Group A", value: 36 },
+    { id: 5, series: "Skiing", group: "Group B", value: 50 },
+    { id: 6, series: "Soccer", group: "Group A", value: 22 },
+    { id: 7, series: "Soccer", group: "Group B", value: 46 },
+  ];
+
+const chartDP = new MutableArrayDataProvider(chartData, {keyAttributes: "value"});
+
+
+
+
+export function chartContent() {
+
+    const [val, setVal] = useState("bar" as ojChart.ChartType);
+
+    const chartItem = (item: ojChart.ItemTemplateContext) => {
+        return(
+            <oj-chart-item value={item.data.value} 
+                           groupId={[item.data.group]}
+                           seriesId={item.data.series}></oj-chart-item>
+        )
+    }
+
+    const valueChangedHandler = useCallback( (event: any) => {
+        setVal(event.target.value);
+    }, [val, setVal]);
+  
+    return (
+        <div class="oj-web-applayout-max-width oj-web-applayout-content"
+             style="border:1px solid black; margin: 10%; padding: 10%; border-radius: 10px">
+            <h3>Chart Demostration</h3>
+
+            <oj-select-single id="selector"
+                              value={val}
+                              data={chartTypeDP}
+                              onvalueChanged={valueChangedHandler}></oj-select-single>
+
+            <div style="height: 20px"></div>
+            
+            <oj-chart id="chart"
+                    type={val}
+                    data={chartDP}>
+                <template slot="itemTemplate" render={chartItem}></template>
+            </oj-chart>
+        </div>
+    );
+};
