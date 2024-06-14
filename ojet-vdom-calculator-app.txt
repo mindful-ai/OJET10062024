@@ -1,0 +1,87 @@
+import { h } from "preact";
+import { useState, useCallback, useEffect } from 'preact/hooks';
+
+import "ojs/ojinputnumber";
+import "ojs/ojradioset";
+import "ojs/ojinputtext";
+
+export function Content() {
+
+    const [val1, setVal1] = useState(0);
+    const [val2, setVal2] = useState(0);
+    const [op, setOp] = useState('add');
+    const [result, setResult] = useState(0);
+
+    const updateVal1 = useCallback( (event: any) => {
+        console.log(" Input 1 Changing -> ", event.target.value);
+        setVal1(event.target.value);
+        //calculateResult();
+    }, [val1, setVal1]);
+
+    const updateVal2 = useCallback( (event: any) => {
+        console.log(" Input 2 Changing -> ", event.target.value);
+        setVal2(event.target.value);
+        //calculateResult();
+    }, [val2, setVal2]);
+
+    const updateRadioButtonChoice = useCallback( (event: any) => {
+        console.log(" Radio Buttons Changing -> ", event.target.value);
+        setOp(event.target.value);
+        //calculateResult();
+    }, [op, setOp]);
+
+    const calculateResult = () => {
+        var res: number = 0;
+        switch(op){
+            case "add" : { res = val1 + val2; break; }
+            case "sub" : { res = val1 - val2; break; }
+            case "mul" : { res = val1 * val2; break; }
+            case "div" : { res = val1 / val2; break; }
+        }
+        setResult(res);
+        console.log("Val1 = ", val1, "Val2 = ", val2, "Op = ", op, "Res = ", res);
+    }
+
+    useEffect( () => {
+        calculateResult();
+    }, [val1, val2, op]);
+
+    return (
+        <div class="oj-web-applayout-max-width oj-web-applayout-content" 
+             style="width:50%; border:1px solid black; margin:2%; padding: 2%; border-radius:10px">
+            <h3>Calculator</h3>
+            <oj-input-number    id='in1'
+                                min={0}
+                                max={100}
+                                step={1}
+                                value={val1}
+                                onvalueChanged={updateVal1}></oj-input-number>
+
+            <div style="height: 20px"></div>
+
+            <oj-input-number    id='in2'
+                                min={0}
+                                max={100}
+                                step={1}
+                                value={val2}
+                                onvalueChanged={updateVal2}></oj-input-number>
+
+            <div style="height: 20px"></div>
+
+            <oj-radioset id = "radioSetBasic" 
+                         value={op}
+                         onvalueChanged={updateRadioButtonChoice}>
+                <oj-option value={"add"}>{"Add"}</oj-option>
+                <oj-option value={"sub"}>{"Subtract"}</oj-option>
+                <oj-option value={"mul"}>{"Multiply"}</oj-option>
+                <oj-option value={"div"}>{"Divide"}</oj-option>
+            </oj-radioset>
+
+            <div style="height: 20px"></div>
+
+            <oj-button onojAction={calculateResult} label="Result">Result</oj-button>
+
+            <h3>{result}</h3>
+        </div>
+    );
+};
